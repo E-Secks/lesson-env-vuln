@@ -1,27 +1,29 @@
-# lesson-env-vuln
-i-Ready lesson vulnerability that tricks lesson into changing enviroments
+# i-Ready Lesson Environment Vulnerability
 
-# How it works
-i-Ready's lesson checks enviroment using this. This is extremely vulnerable because window.parent can be overriden. They could easily fix it by using window.top because it can't be overriden.
-Interesting that they use window.top in other places but used parent here, in fact it breaks if you use it before lesson is fully loaded because of the other proper checks.
+This vulnerability in i-Ready's lesson allows for manipulation, tricking the lesson into changing environments.
+
+## How it Works
+
+i-Ready's lesson checks the environment using the following code:
 ```js
 key: "isIntegratedEnvironment",
 value: function e() {
   return window !== window.parent
 }
 ```
+This code is highly vulnerable as window.parent can be overridden, posing a security risk. A more secure alternative would be using window.top, which cannot be overridden. Interestingly, other parts of the codebase use window.top, but this specific instance uses window.parent. Furthermore, using window.parent here can cause the code to break if used before the lesson is fully loaded due to improper checks elsewhere.
 
 # Usage
 
 ## i-Ready enviroment
-tricks lesson into thinking its in an iframe in the real i-Ready enviroment. <br>
-sidenote : you can make the parent = `{}` i just made postMessage = console.log to prevent errors and to look at whatever penpal is doing. <br>
+This manipulates the lesson into thinking it's in an iframe within the actual i-Ready environment.
 ```js
 html5Iframe.contentWindow.parent = { postMessage : console.log }
 ```
+Note: Setting postMessage to console.log is done to prevent errors and observe the behavior of the associated Penpal.
 
 ## Local enviroment
-tricks lesson into thinking its not in an iframe and that you just opened the url. <br>
+This manipulates the lesson into thinking it's not in an iframe, simulating the scenario where the URL is directly opened.
 ```js
 html5Iframe.contentWindow.parent = html5Iframe.contentWindow
 ```
